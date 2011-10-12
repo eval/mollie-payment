@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Mollie::Ideal::VERSION
   s.authors     = ["Gert Goet"]
   s.email       = ["gert@thinkcreate.nl"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/eval/mollie-payment"
   s.summary     = %q{WIP}
   s.description = %q{WIP}
 
