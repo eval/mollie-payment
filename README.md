@@ -17,7 +17,7 @@ Installation
 Usage
 ------------
 
-Please check out the documentation.
+Please check out the [documentation](http://rubydoc.info/gems/mollie-payment/0.0.1/frames).
 
 Author
 ------
