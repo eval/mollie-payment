@@ -1,23 +1,16 @@
 Mollie Payment
 ========
 
-This repository is currently an act of [Readme Driven Development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html); an empty box with no implementation, only a documented interface.
+This repository is currently under [Readme Driven Development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html); an empty box with no implementation, only a documented interface.
 
-Documentation is done using [Tomdoc](http://tomdoc.org/).
+Documentation uses the [Tomdoc](http://tomdoc.org/) specification. The generated docs can be [found here](http://rubydoc.info/gems/mollie-payment/0.0.2/frames).
 
-Requirements
-------------
-
-Installation
+Develop
 ------------
     
-    $ gem install mollie-payment
-    
-
-Usage
-------------
-
-Please check out the [documentation](http://rubydoc.info/gems/mollie-payment/0.0.1/frames).
+    $ git clone git://github.com/eval/mollie-payment.git
+    $ cd mollie-payment
+    $ bundle
 
 Author
 ------
