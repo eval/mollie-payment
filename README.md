@@ -1,9 +1,9 @@
 Mollie Payment
 ========
 
-This repository is currently an act of [Readme Driven Development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html); an empty box with no implementation, only an interface.
+This repository is currently an act of [Readme Driven Development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html); an empty box with no implementation, only a documented interface.
 
-Methods are documented using [Tomdoc](http://tomdoc.org/).
+Documentation is done using [Tomdoc](http://tomdoc.org/).
 
 Requirements
 ------------

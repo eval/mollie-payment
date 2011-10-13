@@ -20,7 +20,7 @@ module Mollie
     #   # => [{:id => '0031', :name => 'ABN AMRO'}, ...]
     #
     # Returns an Array of Hash representing banks (keys: String id, 
-    #   String name).
+    # String name).
     def self.banklist;end
     def self.banks
       banklist
@@ -31,7 +31,7 @@ module Mollie
     end
     alias :banks :banklist
 
-    # Public: Request a payment.
+    # Public: Request a transaction.
     #
     # options - Hash options:
     #           :amount - Fixnum the amount *in cents*
@@ -59,7 +59,7 @@ module Mollie
     #         }
     #
     # Returns a Hash representing the transaction (keys: Fixnum amount, 
-    #   String currency, String transaction_id, String url).
+    # String currency, String transaction_id, String url).
     def fetch(options);end
 
     # Public: Verify the status of a transaction.
@@ -88,5 +88,6 @@ module Mollie
     #
     # Returns A Hash representing the result of the transaction (see Examples).
     def check(options);end
+
   end
 end
