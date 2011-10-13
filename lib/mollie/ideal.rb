@@ -1,5 +1,17 @@
 module Mollie
   class Ideal
+    # Public: Initialize Ideal
+    #
+    # partner_id - String your Mollie partner id
+    # options - Hash options:
+    #           :test - Boolean use testmode? (default: true)
+    #
+    # Examples
+    #
+    #   mi = Mollie::Ideal.new('123456', :test => false)
+    #
+    def initialize(partner_id, options={:test => true});end
+
     # Public: All supported banks.
     #
     # Examples
@@ -10,8 +22,8 @@ module Mollie
     # Returns an Array of Hash representing banks (keys: String id, 
     #   String name).
     def self.banklist;end
-    class << self
-      alias :banks :banklist
+    def self.banks
+      banklist
     end
 
     def banklist
@@ -34,7 +46,7 @@ module Mollie
     #
     # Examples
     #
-    #   mi = Mollie::Ideal.new(12345)  
+    #   mi = Mollie::Ideal.new('12345')  
     #   mi.fetch(:amount => 1465, :bank_id => '0721',
     #             :description => "Charlie Brown's Tree", 
     #             :report_url => 'http://example.org/report',
@@ -57,7 +69,7 @@ module Mollie
     #
     # Examples
     #
-    #   mi = Mollie::Ideal.new(12345)  
+    #   mi = Mollie::Ideal.new('12345')
     #   mi.check(:transaction_id => '12345')
     #   # => {
     #           :transaction_id => '482d599bbcc7795727650330ad65fe9b',
