@@ -22,8 +22,8 @@ module Mollie
     # Returns an Array of Hash representing banks (keys: String id, 
     # String name).
     def self.banklist;end
-    def self.banks
-      banklist
+    class << self
+      alias :banks :banklist
     end
 
     def banklist
