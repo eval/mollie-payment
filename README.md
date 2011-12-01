@@ -5,7 +5,7 @@ This repository is currently a work in progress and under [Documentation Driven 
 
 On the one hand to get familiar with documenting and [YARD](http://yardoc.org/). On the other hand to create an opiniated Ruby-wrapper for the Mollie [iDEAL API](https://www.mollie.nl/beheer/betaaldiensten/documentatie/ideal/).
 
-The generated docs can be [found here](http://rubydoc.info/gems/mollie-payment/0.0.2/frames).
+The generated docs can be [found here](http://rubydoc.info/gems/mollie-payment).
 
 Develop
 ------------
