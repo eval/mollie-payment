@@ -17,7 +17,9 @@ module Mollie
     #   # => [{:id => '0031', :name => 'ABN AMRO'}, ...]
     #
     # @return [Array<Hash{Symbol => String}>] the list of banks.
-    def self.banks;end
+    def self.banks
+      [{:id => 1, :name => 'Yadda'}]
+    end
     class << self
       alias :banklist :banks
     end

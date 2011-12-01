@@ -20,4 +20,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "yard"
   s.add_development_dependency "rdiscount"
+  s.add_development_dependency "rspec"
+  s.add_development_dependency "ZenTest"
 end

@@ -13,6 +13,7 @@ Develop
     $ git clone git://github.com/eval/mollie-payment.git
     $ cd mollie-payment
     $ bundle
+    $ bundle exec autotest -s rspec2
 
 Author
 ------
