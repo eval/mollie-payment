@@ -1,9 +1,11 @@
 Mollie Payment
 ========
 
-This repository is currently under [Readme Driven Development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html); an empty box with no implementation, only a documented interface.
+This repository is currently a work in progress and under [Documentation Driven Development](http://thinkingphp.org/spliceit/docs/0.1_alpha/pages/ddd_info.html).
 
-Documentation uses the [Tomdoc](http://tomdoc.org/) specification. The generated docs can be [found here](http://rubydoc.info/gems/mollie-payment/0.0.2/frames).
+On the one hand to get familiar with documenting and [YARD](http://yardoc.org/). On the other hand to create an opiniated Ruby-wrapper for the Mollie [iDEAL API](https://www.mollie.nl/beheer/betaaldiensten/documentatie/ideal/).
+
+The generated docs can be [found here](http://rubydoc.info/gems/mollie-payment/0.0.2/frames).
 
 Develop
 ------------

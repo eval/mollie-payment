@@ -4,3 +4,4 @@ Gemfile.lock
 pkg/*
 .rbenv-gemsets
 .rbenv-version
+.yardoc

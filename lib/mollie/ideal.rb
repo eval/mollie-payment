@@ -1,93 +1,89 @@
 module Mollie
   class Ideal
-    # Public: Initialize Ideal
+    # Create a new Ideal object
     #
-    # partner_id - String your Mollie partner id
-    # options - Hash options:
-    #           :test - Boolean use testmode? (default: true)
-    #
-    # Examples
-    #
-    #   mi = Mollie::Ideal.new('123456', :test => false)
-    #
-    def initialize(partner_id, options={:test => true});end
+    # @param [String] partner_id your Mollie partner id
+    # @param [Hash] options
+    # @option options [Boolean] :production (false) whether or not to operate 
+    #   in production-mode
+    def initialize(partner_id, options={:production => false});end
 
-    # Public: All supported banks.
+    # All supported banks.
     #
-    # Examples
+    # @visibility public
     #
-    #   Mollie::Ideal.banklist
+    # @example
+    #   Mollie::Ideal.banks
     #   # => [{:id => '0031', :name => 'ABN AMRO'}, ...]
     #
-    # Returns an Array of Hash representing banks (keys: String id, 
-    # String name).
-    def self.banklist;end
+    # @return [Array<Hash{Symbol => String}>] the list of banks.
+    def self.banks;end
     class << self
-      alias :banks :banklist
+      alias :banklist :banks
     end
 
-    def banklist
-      self.class.banklist
-    end
-    alias :banks :banklist
-
-    # Public: Request a transaction.
+    # Request a transaction.
     #
-    # options - Hash options:
-    #           :amount - Fixnum the amount *in cents*
-    #           :bank_id - String id of the bank
-    #           :description - String description of the transaction (max. 30 
-    #                          characters)
-    #           :report_url - String url where the result of the transaction 
-    #                         is sent
-    #           :return_url - String url where the visitor is sent
-    #           :profile_key - String profile this transaction should be linked
-    #                          to (default: nil)
+    # @visibility public
     #
-    # Examples
-    #
+    # @param [Hash] opts
+    # @option opts [Fixnum] :amount the amount in cents.
+    # @option opts [String] :bank_id the id of the bank (see {banks}).
+    # @option opts [String] :description description of the transaction 
+    #   (max. 30 characters).
+    # @option opts [String] :report_url address where the result of the 
+    #   transaction is sent (POSTed?).
+    # @option opts [String] :return_url address where the visitor is sent.
+    # @option opts [String] :profile_key (nil) the profile this transaction 
+    #   should be linked to.
+    # 
+    # @example
+    #   
     #   mi = Mollie::Ideal.new('12345')  
-    #   mi.fetch(:amount => 1465, :bank_id => '0721',
-    #             :description => "Charlie Brown's Tree", 
-    #             :report_url => 'http://example.org/report',
-    #             :return_url => 'http://example.org/return')
+    #   mi.request_transaction(:amount => 1465, 
+    #                           :bank_id => '0721',
+    #                           :description => "Charlie Brown's Tree", 
+    #                           :report_url => 'http://example.org/report',
+    #                           :return_url => 'http://example.org/return')
     #   # => {
-    #           :transaction_id => '482d599bbcc7795727650330ad65fe9b',
-    #           :amount => 1465,
-    #           :currency => 'EUR',
-    #           :url => 'https://mijn.postbank.nl/...',
-    #         }
+    #   #        :transaction_id => '482d599bbcc7795727650330ad65fe9b',
+    #   #        :amount => 1465,
+    #   #        :currency => 'EUR',
+    #   #        :url => 'https://mijn.postbank.nl/...',
+    #   #      }
     #
-    # Returns a Hash representing the transaction (keys: Fixnum amount, 
-    # String currency, String transaction_id, String url).
-    def fetch(options);end
+    # @return [Hash] the transaction (see example)
+    def request_transaction(opts);end
 
-    # Public: Verify the status of a transaction.
+    # Verify the status of a transaction.
     #
-    # options - Hash options:
-    #           :transaction_id - String id of the transaction
+    # @visibility public
     #
-    # Examples
-    #
+    # @param [Hash] options
+    # @option options [String] :transaction_id the transaction to verify.
+    # 
+    # @example
     #   mi = Mollie::Ideal.new('12345')
-    #   mi.check(:transaction_id => '12345')
+    #   mi.verify_transaction(:transaction_id => '482d599bbcc7795727650330ad65fe9b')
     #   # => {
-    #           :transaction_id => '482d599bbcc7795727650330ad65fe9b',
-    #           :amount => 1465,
-    #           :currency => 'EUR',
-    #           :payed => true,
-    #           :consumer => {
-    #             :name => 'Hr J Janssen',
-    #             :account => 'P001234567',
-    #             :city => 'Amsterdam'
-    #           },
-    #           :message => 'This iDEAL-order has successfuly been payed for, 
-    #                        and this is the first time you check it.'
-    #         }
+    #   #        :transaction_id => '482d599bbcc7795727650330ad65fe9b',
+    #   #        :amount => 1465,
+    #   #        :currency => 'EUR',
+    #   #        :payed => true,
+    #   #        :consumer => {
+    #   #          :name => 'Hr J Janssen',
+    #   #          :account => 'P001234567',
+    #   #          :city => 'Amsterdam'
+    #   #        },
+    #   #        :message => 'This iDEAL-order has successfuly been payed for, 
+    #   #                     and this is the first time you check it.'
+    #   #      }
     # TODO: docs mention 'status' instead of 'message'
-    #
-    # Returns A Hash representing the result of the transaction (see Examples).
-    def check(options);end
-
+    # 
+    # @note Once a transaction is payed, only the next time you verify the
+    #   transaction will the value of 'payed' be 'true'. 
+    #   Else it will be 'false'.
+    # @return [Hash] the status of the transaction (see example)
+    def verify_transaction(options);end
   end
 end
