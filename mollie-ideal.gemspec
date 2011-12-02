@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "mollie/ideal/version"
+require "mollie/payment/version"
 
 Gem::Specification.new do |s|
   s.name        = "mollie-payment"
-  s.version     = Mollie::Ideal::VERSION
+  s.version     = Mollie::Payment::VERSION
   s.authors     = ["Gert Goet"]
   s.email       = ["gert@thinkcreate.nl"]
   s.homepage    = "https://github.com/eval/mollie-payment"
