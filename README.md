@@ -1,9 +1,7 @@
 Mollie Payment
 ========
 
-This repository is currently a work in progress and under [Documentation Driven Development](http://thinkingphp.org/spliceit/docs/0.1_alpha/pages/ddd_info.html).
-
-On the one hand to get familiar with documenting and [YARD](http://yardoc.org/). On the other hand to focus on creating an opiniated Ruby-wrapper for the Mollie [iDEAL API](https://www.mollie.nl/beheer/betaaldiensten/documentatie/ideal/).
+A client to interact with the Mollie API. Currently only the [iDEAL operations](https://www.mollie.nl/support/documentatie/betaaldiensten/ideal/) are supported.
 
 The generated docs can be [found here](http://rubydoc.info/gems/mollie-payment).
 
