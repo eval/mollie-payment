@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Gert Goet"]
   s.email       = ["gert@thinkcreate.nl"]
   s.homepage    = "https://github.com/eval/mollie-payment"
-  s.summary     = %q{Client for the Mollie API (currently iDEAL only}
-  s.description = %q{Client for the Mollie API (currently iDEAL only}
+  s.summary     = %q{Client for the Mollie API (currently iDEAL-only)}
+  s.description = %q{Client for the Mollie API (currently iDEAL-only)}
 
   s.rubyforge_project = "mollie-payment"
 
