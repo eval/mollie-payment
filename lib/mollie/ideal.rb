@@ -1,12 +1,21 @@
+require 'nokogiri'
+require 'open-uri'
+
 module Mollie
   class Ideal
+    attr_reader :partner_id, :production
     # Create a new Ideal object
     #
     # @param [String] partner_id your Mollie partner id
     # @param [Hash] options
     # @option options [Boolean] :production (false) whether or not to operate 
     #   in production-mode
-    def initialize(partner_id, options={:production => false});end
+    def initialize(partner_id, options={:production => false})
+      @partner_id = partner_id
+      @production = options[:production]
+    end
+
+    alias :production? :production
 
     # All supported banks.
     #
@@ -18,7 +27,12 @@ module Mollie
     #
     # @return [Array<Hash{Symbol => String}>] the list of banks.
     def self.banks
-      [{:id => 1, :name => 'Yadda'}]
+      Nokogiri(open('https://secure.mollie.nl/xml/ideal?a=banklist')).xpath('//bank').map do |bank|
+        {
+         :id => (bank/'bank_id').inner_html, 
+         :name => (bank/'bank_name').inner_html
+        }
+      end
     end
     class << self
       alias :banklist :banks
@@ -55,7 +69,20 @@ module Mollie
     #   #      }
     #
     # @return [Hash] the transaction (see example)
-    def request_transaction(opts);end
+    def request_transaction(options={})
+      options_query_params_mapping = [[:amount], [:bank_id], [:description], [:report_url, :reporturl], [:return_url, :returnurl]]
+      selected_options = options_query_params_mapping.inject({}) do |res, (ours, theirs)|
+        res.send(:[]=, (theirs || ours), options[ours])
+        res
+      end
+      selected_options.merge!(:a => 'fetch', :partnerid => self.partner_id)
+      selected_options.merge!(:testmode => 'true') unless self.production?
+      url = "https://secure.mollie.nl/xml/ideal?%s" % [URI.encode_www_form(selected_options)]
+      doc = Nokogiri(open(url))
+
+      keys = %w(transaction_id amount currency url).map(&:to_sym)
+      Hash[keys.zip(keys.map{|k| doc.xpath("//response/order/#{k}")})]
+    end
 
     # Verify the status of a transaction.
     #

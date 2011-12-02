@@ -1,0 +1,66 @@
+---
+- !ruby/struct:VCR::HTTPInteraction
+  request: !ruby/struct:VCR::Request
+    method: :get
+    uri: https://secure.mollie.nl:443/xml/ideal?a=fetch&amount=12345&bank_id=0031&description=description%20goes%20here&partnerid=123456&reporturl=http://example.org/report&returnurl=http://example.org/return&testmode=true
+    body: !!null 
+    headers: !!null 
+  response: !ruby/struct:VCR::Response
+    status: !ruby/struct:VCR::ResponseStatus
+      code: 200
+      message: OK
+    headers:
+      server:
+      - nginx/0.7.67
+      date:
+      - Thu, 01 Dec 2011 20:45:53 GMT
+      content-type:
+      - text/xml
+      connection:
+      - keep-alive
+      content-location:
+      - ideal.php
+      vary:
+      - negotiate
+      tcn:
+      - choice
+      x-powered-by:
+      - PHP/5.2.6-1+lenny13
+      content-length:
+      - '430'
+    body: ! "<?xml version=\"1.0\" ?>\n<response>\n\t<order>\n\t\t<transaction_id>e0be830d5e46289e7da9636beb84729e</transaction_id>\n\t\t<amount>12345</amount>\n\t\t<currency>EUR</currency>\n\t\t<URL>https://www.abnamro.nl/nl/ideal/identification.do?randomizedstring=4164247836&amp;trxid=30000182948803</URL>\n\t\t<message>Your
+      iDEAL-payment has successfully been setup. Your customer should visit the given
+      URL to make the payment</message>\n\t</order>\n</response>"
+    http_version: '1.1'
+- !ruby/struct:VCR::HTTPInteraction
+  request: !ruby/struct:VCR::Request
+    method: :get
+    uri: https://secure.mollie.nl:443/xml/ideal?a=fetch&amount=&bank_id=&description=&partnerid=123456&reporturl=&returnurl=&testmode=true
+    body: !!null 
+    headers: !!null 
+  response: !ruby/struct:VCR::Response
+    status: !ruby/struct:VCR::ResponseStatus
+      code: 200
+      message: OK
+    headers:
+      server:
+      - nginx/0.7.67
+      date:
+      - Thu, 01 Dec 2011 20:45:53 GMT
+      content-type:
+      - text/html
+      connection:
+      - keep-alive
+      content-location:
+      - ideal.php
+      vary:
+      - negotiate
+      tcn:
+      - choice
+      x-powered-by:
+      - PHP/5.2.6-1+lenny13
+      content-length:
+      - '189'
+    body: ! "<?xml version=\"1.0\" ?>\n<response>\n\t<item type=\"error\">\n\t\t<errorcode>-3</errorcode>\n\t\t<message>A
+      fetch was issued without (proper) specification of 'reporturl'</message>\n\t</item>\n</response>"
+    http_version: '1.1'
