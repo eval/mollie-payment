@@ -1,8 +1,10 @@
-require 'nokogiri'
-require 'open-uri'
+require 'httparty'
 
 module Mollie
   class Ideal
+    include HTTParty
+    base_uri 'https://secure.mollie.nl/xml/ideal'
+
     attr_reader :partner_id, :production
     # Create a new Ideal object
     #
@@ -27,11 +29,9 @@ module Mollie
     #
     # @return [Array<Hash{Symbol => String}>] the list of banks.
     def self.banks
-      Nokogiri(open('https://secure.mollie.nl/xml/ideal?a=banklist')).xpath('//bank').map do |bank|
-        {
-         :id => (bank/'bank_id').inner_html,
-         :name => (bank/'bank_name').inner_html
-        }
+      resp = get('', :query => {:a => 'banklist'}).parsed_response
+      resp["response"]["bank"].map do |b|
+        {:id => b["bank_id"], :name => b["bank_name"]}
       end
     end
     class << self
@@ -74,20 +74,17 @@ module Mollie
 
       query_options.merge!(:a => 'fetch', :partnerid => self.partner_id)
       query_options.merge!(:testmode => 'true') unless self.production?
-      url = "https://secure.mollie.nl/xml/ideal?%s" % [URI.encode_www_form(query_options)]
-      doc = Nokogiri(open(url))
 
-      keys = %w(transaction_id amount currency url).map(&:to_sym)
-      values = keys.map do |k|
-        value = doc.xpath("//response/order/#{k}").text
-        case k
-        when :amount
-          value.to_i
-        else
-          value
-        end
+      resp = self.class.get('', :query => query_options).parsed_response
+      order = resp["response"]["order"]
+
+      %w(transaction_id amount currency url).map(&:to_sym).inject({}) do |res, k|
+        v = order[k.to_s]
+        v = v.to_i if k == :amount
+
+        res[k] = v
+        res
       end
-      Hash[keys.zip(values)]
     end
 
     # Verify the status of a transaction.
@@ -123,26 +120,22 @@ module Mollie
       query_options = options_to_query_options(options)
       query_options.merge!(:a => 'check', :partnerid => self.partner_id)
       query_options.merge!(:testmode => 'true') unless self.production?
-      url = "https://secure.mollie.nl/xml/ideal?%s" % [URI.encode_www_form(query_options)]
-      doc = Nokogiri(open(url))
 
-      keys = %w(transaction_id amount currency payed status message).map(&:to_sym)
-      values = keys.map do |k|
-        value = doc.xpath("//response/order/#{k}").text
-        case k
-        when :amount
-          value.to_i
-        when :payed
-          value == "true"
-        else
-          value
-        end
+      resp = self.class.get('', :query => query_options).parsed_response
+      order = resp["response"]["order"]
+
+      result = %w(transaction_id amount currency payed status message).map(&:to_sym).inject({}) do |res, k|
+        v = order[k.to_s]
+        v = v.to_i if k == :amount
+        v = (v == 'true') if k == :payed
+
+        res[k] = v
+        res
       end
-      result = Hash[keys.zip(values)]
 
-      if doc.xpath('//response/order/consumer')
+      if consumer = order["consumer"]
         consumer = {'consumerName' => 'name', 'consumerAccount' => 'account', 'consumerCity' => 'city'}.inject({}) do |res, (theirs, ours)|
-          res[ours.to_sym] = doc.xpath("//response/order/consumer/#{theirs}").text
+          res[ours.to_sym] = consumer[theirs]
           res
         end
         result[:consumer] = consumer
