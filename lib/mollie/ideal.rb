@@ -79,7 +79,7 @@ module Mollie
       order = resp["response"]["order"]
 
       %w(transaction_id amount currency url).map(&:to_sym).inject({}) do |res, k|
-        v = order[k.to_s]
+        v = order[k.to_s] || order[k.to_s.upcase]
         v = v.to_i if k == :amount
 
         res[k] = v
