@@ -20,10 +20,10 @@ Gem::Specification.new do |s|
 
   s.add_dependency "httparty", "~> 0.8.1"
 
-  s.add_development_dependency "yard"
-  s.add_development_dependency "rdiscount"
-  s.add_development_dependency "rspec"
-  s.add_development_dependency "ZenTest"
-  s.add_development_dependency "vcr"
-  s.add_development_dependency "webmock"
+  s.add_development_dependency "yard", "~> 0.7.4"
+  s.add_development_dependency "rdiscount", "~> 1.6.8"
+  s.add_development_dependency "rspec", "~> 2.7.0"
+  s.add_development_dependency "ZenTest", "~> 4.6.2"
+  s.add_development_dependency "vcr", "~> 1.11.3"
+  s.add_development_dependency "webmock", "~> 1.7.8"
 end
