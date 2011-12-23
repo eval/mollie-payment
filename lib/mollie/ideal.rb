@@ -1,11 +1,37 @@
 require 'httparty'
 
 module Mollie
+  class IdealException < RuntimeError;end
+  
+  class HTTParty::Response
+    def error?
+      parsed_response && 
+      (item = parsed_response['item']) && (type = item['type']) && 
+      'error' == type
+    end
+  end
+
+  class Parser < HTTParty::Parser
+    def xml
+      result = super['response']
+    end
+
+    # Some responses (mostly error-responses) have content-type 'text/html',
+    # but an xml-body; therefor handle all html-responses *initially* as xml.
+    def html
+      xml
+    rescue MultiXml::ParseError, StandardError
+      super
+    end
+  end
+
   class Ideal
     include HTTParty
+    parser Mollie::Parser
     base_uri 'https://secure.mollie.nl/xml/ideal'
 
     attr_reader :partner_id, :production
+
     # Create a new Ideal object
     #
     # @param [String] partner_id your Mollie partner id
@@ -29,8 +55,11 @@ module Mollie
     #
     # @return [Array<Hash{Symbol => String}>] the list of banks.
     def self.banks
-      resp = get('', :query => {:a => 'banklist'}).parsed_response
-      resp["response"]["bank"].map do |b|
+      resp = get('', :query => {:a => 'banklist'})
+      parsed_response = resp.parsed_response
+      return error_response(resp) if resp.error?
+
+      parsed_response["bank"].map do |b|
         {:id => b["bank_id"], :name => b["bank_name"]}
       end
     end
@@ -48,7 +77,7 @@ module Mollie
     # @option opts [String] :description description of the transaction
     #   (max. 30 characters).
     # @option opts [String] :report_url address where the result of the
-    #   transaction is sent (POSTed?).
+    #   transaction is sent.
     # @option opts [String] :return_url address where the visitor is sent.
     # @option opts [String] :profile_key (nil) the profile this transaction
     #   should be linked to.
@@ -75,8 +104,11 @@ module Mollie
       query_options.merge!(:a => 'fetch', :partnerid => self.partner_id)
       query_options.merge!(:testmode => 'true') unless self.production?
 
-      resp = self.class.get('', :query => query_options).parsed_response
-      order = resp["response"]["order"]
+      resp = self.class.get('', :query => query_options, :accept => 'text/xml')
+      parsed_response = resp.parsed_response
+      return error_response(resp) if resp.error?
+
+      order = parsed_response["order"]
 
       %w(transaction_id amount currency url).map(&:to_sym).inject({}) do |res, k|
         v = order[k.to_s] || order[k.to_s.upcase]
@@ -111,21 +143,31 @@ module Mollie
     #   #                     and this is the first time you check it.',
     #   #        :status => 'Expired'
     #   #      }
+    #   # Example of an error:
+    #   # => {
+    #   #      :error => {
+    #   #        :code => "-10",
+    #   #        :message => "This is an unknown order."
+    #   #      }
+    #   #    }
     #
     # @note Once a transaction is payed, only the next time you verify the
     #   transaction will the value of 'payed' be 'true'.
     #   Else it will be 'false'.
-    # @return [Hash] the status of the transaction (see example)
+    # @return [Hash] the status of the transaction (see example). 
     def verify_transaction(options={})
       query_options = options_to_query_options(options)
       query_options.merge!(:a => 'check', :partnerid => self.partner_id)
       query_options.merge!(:testmode => 'true') unless self.production?
 
-      resp = self.class.get('', :query => query_options).parsed_response
-      order = resp["response"]["order"]
+      resp = self.class.get('', :query => query_options)
+      parsed_response = resp.parsed_response
+      return error_response(resp) if resp.error?
+
+      order = parsed_response["order"]
 
       result = %w(transaction_id amount currency payed status message).map(&:to_sym).inject({}) do |res, k|
-        v = order[k.to_s]
+        v = order[k.to_s] || order[k.to_s.upcase]
         v = v.to_i if k == :amount
         v = (v == 'true') if k == :payed
 
@@ -157,6 +199,11 @@ module Mollie
         result[theirs] = options[ours] if options[ours]
         result
       end
+    end
+
+    def error_response(response)
+      error = response.parsed_response['item']
+      {:error => {:code => error['errorcode'], :message => error['message']}}
     end
   end
 end
