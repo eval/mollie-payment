@@ -11,6 +11,8 @@ Develop
     $ git clone git://github.com/eval/mollie-payment.git
     $ cd mollie-payment
     $ bundle
+    $ rake spec
+    # or
     $ bundle exec autotest
 
 Author
